@@ -48,14 +48,6 @@ This mod is designed to be installed seamlessly using **Sine**, the leading mod 
 
 ---
 
-## 🔒 Security & Performance
-
-- Built using modern, asynchronous Firefox/Zen platform APIs (`IOUtils`, `PathUtils`, and `Services`).
-- Restricts file watching to safe paths in the user's home directory.
-- Avoids blocking the main thread, keeping browser UI responsiveness buttery smooth.
-
----
-
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE). Feel free to share it, adapt it, and submit pull requests!
