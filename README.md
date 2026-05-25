@@ -9,10 +9,10 @@ Say goodbye to manually opening the Site Control Panel and repeatedly clicking "
 ## ✨ Features
 
 - **⚡ Live Preview**: Instant hot-reloading of slider modifications, visual styles, colors, and custom CSS without page reloads.
-- **📁 Dual File Support**: Automatically watches both `~/My Boost` and `~/my_boost.json` under your user home directory.
-- **🧠 Zero-Conf Matching**: 
-  1. **By Name**: Updates any active boost on any domain whose name matches the `boostName` in your JSON file (e.g. `"My Boost"`).
-  2. **Active Tab Priority**: Automatically force-updates the active boost on your currently open tab's domain, making it incredibly convenient for quick prototyping!
+- **📁 Multi-File Directory Watching**: Automatically monitors **all** `.json` (and extensionless) boost files placed inside the `~/.config/zen-boosts/` directory.
+- **🧠 Zero-Conf Smart Matching**: 
+  - **By Name**: Modifying any file inside `~/.config/zen-boosts/` instantly reloads and applies the update only to the specific website utilizing the matching `boostName` (e.g. `github_boost.json` containing `"boostName": "GitHub Dark"` will reload `github.com`).
+  - **Active Tab Priority**: For the custom watch file path or default files, automatically force-updates the active boost on your currently open tab, making it incredibly convenient for quick style prototyping!
 - **🔔 Visual Confirmation**: Triggers the native Zen Browser toast notification to let you know the reload succeeded.
 - **🍃 Light and Efficient**: Employs non-blocking, performance-oriented `IOUtils.stat` polling (every 500ms) with negligible CPU usage. It automatically coordinates globally so that only a single timer runs, even if you open dozens of browser windows.
 
@@ -35,15 +35,25 @@ This mod is designed to be installed seamlessly using **Sine**, the leading mod 
 
 ---
 
-## 🔧 Configuration
+## 🔧 Configuration & Multi-File Management
 
-By default, the mod watches `~/My Boost` and `~/my_boost.json` in your home directory. If you prefer to save your boost files in a different directory or with a different name, you can customize this directly in the **Sine Mods Settings UI**:
+By default, the mod automatically creates and watches the directory:
+📂 `~/.config/zen-boosts/`
+
+### 📁 Multi-File Management (Recommended)
+You can store separate boost `.json` files for different websites inside `~/.config/zen-boosts/` (e.g., `github_boost.json`, `youtube_style.json`, `chatgpt.json`). 
+- Simply name the file anything you want and ensure the `"boostName"` inside the file matches the name of the active boost applied in your browser for that website.
+- The mod will automatically detect, read, and watch all files in this directory. 
+- Editing and saving `github_boost.json` will only reload your GitHub styles, leaving YouTube unaffected!
+
+### 🔧 Custom Watch Path (Single File Override)
+If you prefer to watch a single specific file anywhere else on your system, you can set an override directly in the **Sine Mods Settings UI**:
 
 1. Go to **Zen Browser Settings > Sine Mods**.
 2. Find **Zen Boost Hot Reload** in your installed mods list and click on its settings.
 3. In the **Custom Watch File Path** text input, enter the absolute path to your JSON boost file (e.g., `/home/tony/projects/styles/boost.json`).
 4. **No browser restart required!** Any change to this path is applied dynamically on the very next 500ms check, instantly watching your new file path.
-5. If you ever want to revert to the default paths, simply clear the input field and save.
+5. If you ever want to revert to the default directory paths, simply clear the input field and save.
 
 ---
 
