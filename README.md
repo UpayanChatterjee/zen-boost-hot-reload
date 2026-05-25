@@ -8,12 +8,12 @@ Say goodbye to manually opening the Site Control Panel and repeatedly clicking "
 
 ##  Features
 
-- ** Live Preview**: Instant hot-reloading of slider modifications, visual styles, colors, and custom CSS without page reloads.
-- ** Multi-File Directory Watching**: Automatically monitors **all** `.json` (and extensionless) boost files placed inside the `~/.config/zen-boosts/` directory.
-- ** Zero-Conf Smart Matching**: 
+- **Live Preview**: Instant hot-reloading of slider modifications, visual styles, colors, and custom CSS without page reloads.
+- **Multi-File Directory Watching**: Automatically monitors **all** `.json` (and extensionless) boost files placed inside the `~/.config/zen-boosts/` directory.
+- **Zero-Conf Smart Matching**: 
   - **By Name**: Modifying any file inside `~/.config/zen-boosts/` instantly reloads and applies the update only to the specific website utilizing the matching `boostName` (e.g. `github_boost.json` containing `"boostName": "GitHub Dark"` will reload `github.com`).
   - **Active Tab Priority**: For the custom watch file path or default files, automatically force-updates the active boost on your currently open tab, making it incredibly convenient for quick style prototyping!
-- ** Visual Confirmation**: Triggers the native Zen Browser toast notification to let you know the reload succeeded.
+- **Visual Confirmation**: Triggers the native Zen Browser toast notification to let you know the reload succeeded.
 
 ---
 
