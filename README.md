@@ -28,7 +28,7 @@ This mod is designed to be installed seamlessly using **Sine**, the leading mod 
 3. Click on the **Settings/Menu icon** inside Sine and ensure that **"downloading JS from unofficial sources"** (or custom user scripts) is enabled.
 4. Copy the URL of this repository:
    ```text
-   https://github.com/moverest/zen-boost-hot-reload
+   https://github.com/UpayanChatterjee/zen-boost-hot-reload
    ```
 5. Paste it into Sine's custom installation/URL bar and click **Install**.
 6. **Restart Zen Browser** once to allow the startup caches to rebuild and register the mod.
