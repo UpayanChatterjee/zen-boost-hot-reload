@@ -1,0 +1,29 @@
+{
+  "id": "zen-boost-hot-reload",
+  "name": "Zen Boost Hot Reload",
+  "description": "Automatically reloads and applies Zen Browser Boosts in real-time when modified in your local My Boost or my_boost.json file.",
+  "homepage": "https://github.com/moverest/zen-boost-hot-reload",
+  "readme": "https://raw.githubusercontent.com/moverest/zen-boost-hot-reload/main/README.md",
+  "author": "moverest",
+  "version": "1.0.0",
+  "tags": [
+    "Boosts",
+    "Developer",
+    "Hot-Reload",
+    "Productivity",
+    "Customization"
+  ],
+  "scripts": {
+    "hot-reload.uc.js": {
+      "name": "Zen Boost Hot Reload",
+      "description": "Watches and hot-reloads Boost files live on active websites",
+      "include": [
+        "chrome://browser/content/browser.xhtml"
+      ]
+    }
+  },
+  "fork": [
+    "zen"
+  ],
+  "createdAt": "2026-05-26"
+}
