@@ -22,6 +22,7 @@
       ]
     }
   },
+  "preferences": "preferences.json",
   "fork": [
     "zen"
   ],

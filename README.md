@@ -35,12 +35,24 @@ This mod is designed to be installed seamlessly using **Sine**, the leading mod 
 
 ---
 
+## 🔧 Configuration
+
+By default, the mod watches `~/My Boost` and `~/my_boost.json` in your home directory. If you prefer to save your boost files in a different directory or with a different name, you can customize this directly in the **Sine Mods Settings UI**:
+
+1. Go to **Zen Browser Settings > Sine Mods**.
+2. Find **Zen Boost Hot Reload** in your installed mods list and click on its settings.
+3. In the **Custom Watch File Path** text input, enter the absolute path to your JSON boost file (e.g., `/home/tony/projects/styles/boost.json`).
+4. **No browser restart required!** Any change to this path is applied dynamically on the very next 500ms check, instantly watching your new file path.
+5. If you ever want to revert to the default paths, simply clear the input field and save.
+
+---
+
 ## 🚀 How to Use
 
 1. **Import/Apply Your Boost**:
    - Make sure you have applied a Boost named `"My Boost"` to a website (e.g., `github.com` or `chatgpt.com`).
 2. **Launch Your Editor**:
-   - Open `~/my_boost.json` or `~/My Boost` in your preferred editor (VS Code, Vim, Cursor, etc.).
+   - Open your watched boost file (either the default `~/my_boost.json` or your custom watch path) in your preferred editor (VS Code, Vim, Cursor, etc.).
 3. **Save and Watch**:
    - Tweak some values (like `brightness`, `contrast`, add selectors to `zapSelectors`, or write custom CSS under `customCSS`).
    - Save the file.

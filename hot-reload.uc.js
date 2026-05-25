@@ -8,13 +8,29 @@
   }
   gZenBoostsManager.__hotReloadWatcherInitialized = true;
 
-  const homeDir = Services.dirsvc.get("Home", Ci.nsIFile).path || Services.env.get("HOME");
-  const paths = [
-    PathUtils.join(homeDir, "My Boost"),
-    PathUtils.join(homeDir, "my_boost.json")
-  ];
-
+  const PREF_NAME = "extensions.zen-boost-hot-reload.watch-file-path";
   let lastModifiedTimes = new Map(); // path -> mtime
+
+  function getPathsToWatch() {
+    let customPath = "";
+    try {
+      if (Services.prefs.prefHasUserValue(PREF_NAME)) {
+        customPath = Services.prefs.getStringPref(PREF_NAME).trim();
+      }
+    } catch (e) {
+      // Preference doesn't exist yet or is invalid
+    }
+
+    if (customPath) {
+      return [customPath];
+    }
+
+    const homeDir = Services.dirsvc.get("Home", Ci.nsIFile).path || Services.env.get("HOME");
+    return [
+      PathUtils.join(homeDir, "My Boost"),
+      PathUtils.join(homeDir, "my_boost.json")
+    ];
+  }
 
   async function checkFile(path) {
     try {
@@ -26,7 +42,7 @@
       const prevMtime = lastModifiedTimes.get(path);
 
       if (prevMtime === undefined) {
-        // Initialize mtime on startup
+        // Initialize mtime on startup or when path changes
         lastModifiedTimes.set(path, mtime);
         return;
       }
@@ -124,11 +140,22 @@
     }
   }
 
-  function tick() {
-    paths.forEach(checkFile);
+  async function tick() {
+    const currentPaths = getPathsToWatch();
+
+    // Clean up cached mtimes for paths that are no longer being watched
+    for (const cachedPath of lastModifiedTimes.keys()) {
+      if (!currentPaths.includes(cachedPath)) {
+        lastModifiedTimes.delete(cachedPath);
+      }
+    }
+
+    for (const path of currentPaths) {
+      await checkFile(path);
+    }
   }
 
   // Poll every 500ms
   setInterval(tick, 500);
-  console.log("[Boost Hot-Reload] Watcher successfully initialized.");
+  console.log("[Boost Hot-Reload] Watcher successfully initialized with dynamic preference support.");
 })();
