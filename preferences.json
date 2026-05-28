@@ -11,7 +11,7 @@
   {
     "type": "string",
     "property": "extensions.zen-boost-hot-reload.watch-file-path",
-    "label": "Custom Watch File Path",
+    "label": "Custom Watch Directory Path",
     "description": "Enter the absolute path to a directory containing boost files to watch (e.g., /home/username/my-boosts). Leave empty to watch the default ~/.config/zen-boosts/ directory.",
     "defaultValue": ""
   }

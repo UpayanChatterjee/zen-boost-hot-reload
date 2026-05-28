@@ -36,7 +36,14 @@
         const children = await IOUtils.getChildren(dirPath);
         for (const child of children) {
           if (child.endsWith(".json") || !child.split("/").pop().includes(".")) {
-            paths.push(child);
+            try {
+              const stat = await IOUtils.stat(child);
+              if (stat.type === "regular") {
+                paths.push(child);
+              }
+            } catch (e) {
+              // Skip children that can't be stat'd
+            }
           }
         }
       }
@@ -46,7 +53,7 @@
     return paths;
   }
 
-  async function checkFile(path) {
+  async function checkFile(path, isDirectoryDiscovered) {
     try {
       if (!(await IOUtils.exists(path))) {
         return;
@@ -64,14 +71,14 @@
       if (mtime > prevMtime) {
         lastModifiedTimes.set(path, mtime);
         console.log(`[Boost Hot-Reload] Detected change in ${path}. Reloading...`);
-        await reloadBoostFromFile(path);
+        await reloadBoostFromFile(path, isDirectoryDiscovered);
       }
     } catch (e) {
       console.error(`[Boost Hot-Reload] Error checking file ${path}:`, e);
     }
   }
 
-  async function reloadBoostFromFile(path) {
+  async function reloadBoostFromFile(path, isDirectoryDiscovered) {
     try {
       const content = await IOUtils.readUTF8(path);
       const newBoostData = JSON.parse(content);
@@ -107,8 +114,8 @@
         }
       }
 
-      // 2. Force-update the current tab's active domain if no name-matched boosts found
-      if (updatedCount === 0) {
+      // 2. Force-update the current tab's active domain (only for targeted files, not directory scans)
+      if (!isDirectoryDiscovered && updatedCount === 0) {
         const mostRecentWin = Services.wm.getMostRecentWindow("navigator:browser");
         if (mostRecentWin && mostRecentWin.gBrowser) {
           const activeTab = mostRecentWin.gBrowser.selectedTab;
@@ -173,7 +180,7 @@
     }
 
     for (const path of allPaths) {
-      await checkFile(path);
+      await checkFile(path, true);
     }
   }
 
