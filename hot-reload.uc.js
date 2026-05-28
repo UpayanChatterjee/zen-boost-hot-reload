@@ -25,16 +25,16 @@
     return "";
   }
 
-  async function getDirectoryPaths() {
+  async function getDirectoryPaths(dirPath, autoCreate) {
     let paths = [];
     try {
-      // Ensure watch directory exists
-      await IOUtils.makeDirectory(watchDir, { createAncestors: true });
+      if (autoCreate) {
+        await IOUtils.makeDirectory(dirPath, { createAncestors: true });
+      }
 
-      if (await IOUtils.exists(watchDir)) {
-        const children = await IOUtils.getChildren(watchDir);
+      if (await IOUtils.exists(dirPath)) {
+        const children = await IOUtils.getChildren(dirPath);
         for (const child of children) {
-          // Check for .json or no extension files
           if (child.endsWith(".json") || !child.split("/").pop().includes(".")) {
             paths.push(child);
           }
@@ -46,7 +46,7 @@
     return paths;
   }
 
-  async function checkFile(path, isDirectoryDiscovered) {
+  async function checkFile(path) {
     try {
       if (!(await IOUtils.exists(path))) {
         return;
@@ -64,14 +64,14 @@
       if (mtime > prevMtime) {
         lastModifiedTimes.set(path, mtime);
         console.log(`[Boost Hot-Reload] Detected change in ${path}. Reloading...`);
-        await reloadBoostFromFile(path, isDirectoryDiscovered);
+        await reloadBoostFromFile(path);
       }
     } catch (e) {
       console.error(`[Boost Hot-Reload] Error checking file ${path}:`, e);
     }
   }
 
-  async function reloadBoostFromFile(path, isDirectoryDiscovered) {
+  async function reloadBoostFromFile(path) {
     try {
       const content = await IOUtils.readUTF8(path);
       const newBoostData = JSON.parse(content);
@@ -107,8 +107,8 @@
         }
       }
 
-      // 2. Force-update the current tab's active domain (ONLY for custom/default paths, not directory-discovered)
-      if (!isDirectoryDiscovered && updatedCount === 0) {
+      // 2. Force-update the current tab's active domain if no name-matched boosts found
+      if (updatedCount === 0) {
         const mostRecentWin = Services.wm.getMostRecentWindow("navigator:browser");
         if (mostRecentWin && mostRecentWin.gBrowser) {
           const activeTab = mostRecentWin.gBrowser.selectedTab;
@@ -159,32 +159,21 @@
 
   async function tick() {
     const customPath = getCustomPath();
-    const directoryPaths = await getDirectoryPaths();
+    const watchDirPath = customPath || watchDir;
+    const autoCreate = !customPath;
+    const allPaths = await getDirectoryPaths(watchDirPath, autoCreate);
 
-    // Combine paths, and track directory-discovered ones
-    const allPaths = new Set();
-    const directorySet = new Set(directoryPaths);
-
-    directoryPaths.forEach(p => allPaths.add(p));
-    if (customPath) {
-      allPaths.add(customPath);
-    }
-
-    // Default paths if nothing else exists
-    if (allPaths.size === 0) {
-      allPaths.add(PathUtils.join(homeDir, "My Boost"));
-      allPaths.add(PathUtils.join(homeDir, "my_boost.json"));
-    }
+    const pathSet = new Set(allPaths);
 
     // Clean up cached mtimes for paths that are no longer being watched
     for (const cachedPath of lastModifiedTimes.keys()) {
-      if (!allPaths.has(cachedPath)) {
+      if (!pathSet.has(cachedPath)) {
         lastModifiedTimes.delete(cachedPath);
       }
     }
 
     for (const path of allPaths) {
-      await checkFile(path, directorySet.has(path));
+      await checkFile(path);
     }
   }
 

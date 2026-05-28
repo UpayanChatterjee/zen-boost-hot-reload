@@ -1,74 +1,86 @@
 # Zen Boost Hot Reload
 
-A native **Zen Browser Mod** (for the [Sine Mod Engine](https://github.com/CosmoCreeper/Sine)) that enables **automatic, real-time hot-reloading** of your Boosts! 
+A mod for Zen Browser that automatically watches your Boost files on disk and applies changes in real time. Edit a file, save it, and the browser updates instantly — no manual re-importing required.
 
-Say goodbye to manually opening the Site Control Panel and repeatedly clicking "Import Boost" whenever you tweak your local boost file. Just edit your file, save it, and watch the target website live-update instantly!
-
----
-
-##  Features
-
-- **Live Preview**: Instant hot-reloading of slider modifications, visual styles, colors, and custom CSS without page reloads.
-- **Multi-File Directory Watching**: Automatically monitors **all** `.json` (and extensionless) boost files placed inside the `~/.config/zen-boosts/` directory.
-- **Zero-Conf Smart Matching**: 
-  - **By Name**: Modifying any file inside `~/.config/zen-boosts/` instantly reloads and applies the update only to the specific website utilizing the matching `boostName` (e.g. `github_boost.json` containing `"boostName": "GitHub Dark"` will reload `github.com`).
-  - **Active Tab Priority**: For the custom watch file path or default files, automatically force-updates the active boost on your currently open tab, making it incredibly convenient for quick style prototyping!
-- **Visual Confirmation**: Triggers the native Zen Browser toast notification to let you know the reload succeeded.
+This mod is built for the [Sine Mod Engine](https://github.com/CosmoCreeper/Sine).
 
 ---
 
-##  Installation
+## What It Does
 
-This mod is designed to be installed seamlessly using **Sine**, the leading mod and theme manager for Zen Browser.
+Zen Browser lets you apply "Boosts" — visual overrides (colors, CSS, sliders) for individual websites. Normally, when you edit a Boost file on disk, you have to manually re-import it through the Site Control Panel every time.
 
-### Easy 1-Click Install via Sine
-1. Open your **Zen Browser Settings**.
-2. Navigate to **Sine Mods** (or the corresponding mods manager tab).
-3. Click on the **Settings/Menu icon** inside Sine and ensure that **"downloading JS from unofficial sources"** (or custom user scripts) is enabled.
-4. Copy the URL of this repository:
-   ```text
+This mod removes that step. It watches a directory (or a specific file) for changes and automatically applies the updated Boost to any open tab that uses it.
+
+### How Matching Works
+
+When a file changes, the mod reads it and looks for the `boostName` field inside the JSON. It then finds every domain in your browser that has an active Boost with that same name and updates it. If no domain matches by name, it force-applies the Boost to the active tab.
+
+---
+
+## Installation
+
+This mod is installed through Sine, the mod manager for Zen Browser.
+
+1. Open Zen Browser and go to **Settings**.
+2. Navigate to the **Sine Mods** section.
+3. Open the Sine settings menu and make sure the option to install mods from external sources is enabled.
+4. Paste the following URL into the installation field and confirm:
+   ```
    https://github.com/UpayanChatterjee/zen-boost-hot-reload
    ```
-5. Paste it into Sine's custom installation/URL bar and click **Install**.
-6. **Restart Zen Browser** once to allow the startup caches to rebuild and register the mod.
+5. Restart Zen Browser.
+
+After restarting, the mod is active. A watch directory is created automatically at `~/.config/zen-boosts/`.
 
 ---
 
-##  Configuration & Multi-File Management
+## Configuration
 
-By default, the mod automatically creates and watches the directory:
- `~/.config/zen-boosts/`
+### Default: Watch `~/.config/zen-boosts/`
 
-###  Multi-File Management (Recommended)
-You can store separate boost `.json` files for different websites inside `~/.config/zen-boosts/` (e.g., `github_boost.json`, `youtube_style.json`, `chatgpt.json`). 
-- Simply name the file anything you want and ensure the `"boostName"` inside the file matches the name of the active boost applied in your browser for that website.
-- The mod will automatically detect, read, and watch all files in this directory. 
-- Editing and saving `github_boost.json` will only reload your GitHub styles, leaving YouTube unaffected!
+Out of the box, the mod watches `~/.config/zen-boosts/` for any `.json` files (or files with no extension). This directory is created automatically on first run.
 
-###  Custom Watch Path (Single File Override)
-If you prefer to watch a single specific file anywhere else on your system, you can set an override directly in the **Sine Mods Settings UI**:
+Place your Boost JSON files in this directory. The file name does not matter — only the `boostName` field inside the JSON is used for matching.
 
-1. Go to **Zen Browser Settings > Sine Mods**.
-2. Find **Zen Boost Hot Reload** in your installed mods list and click on its settings.
-3. In the **Custom Watch File Path** text input, enter the absolute path to your JSON boost file (e.g., `/home/tony/projects/styles/boost.json`).
-4. **No browser restart required!** Any change to this path is applied dynamically on the very next 500ms check, instantly watching your new file path.
-5. If you ever want to revert to the default directory paths, simply clear the input field and save.
+Example directory structure:
+
+```
+~/.config/zen-boosts/
+  github.json
+  youtube.json
+  reddit.json
+```
+
+Each file should contain a `boostName` that matches the name of the Boost currently applied to the target website in your browser.
+
+### Custom Directory
+
+You can point the mod at a different directory instead of the default one.
+
+1. Go to **Settings > Sine Mods**.
+2. Find **Zen Boost Hot Reload** and open its settings.
+3. Enter the absolute path to a directory in the text field (for example, `/home/username/my-boosts`).
+4. The change takes effect immediately — no restart needed.
+
+When a custom path is set, the mod watches that directory instead. The default `~/.config/zen-boosts/` directory is ignored. If you clear the field, the mod reverts to the default.
+
+You can provide the path with or without a trailing slash — both work.
 
 ---
 
-##  How to Use
+## Usage
 
-1. **Import/Apply Your Boost**:
-   - Say you have applied a Boost named `"My Boost"` to a website (e.g., `github.com` or `chatgpt.com`).
-2. **Launch Your Editor**:
-   - Open your watched boost file (by default `~.config/zen-boosts/my_boost.json` or the name of the boost file with `"boostName":"My Boost"`) in your preferred editor.
-3. **Save and Watch**:
-   - Tweak some values (like `brightness`, `contrast`, add selectors to `zapSelectors`, or write custom CSS under `customCSS`).
-   - Save the file.
-   - **Voila!** The browser instantly grabs the new settings, applies them to the active webpage, and displays a success toast!
+1. Apply a Boost to a website using Zen Browser's normal process and export the boost.
+2. Select a suitable location on disk to export the boost to. If you are using the default setup, it should be in `~/.config/zen-boosts/`.
+3. Open the file in any text editor.
+4. Make changes (adjust `brightness`, `contrast`, `customCSS`, `zapSelectors`, etc.).
+5. Save the file.
+
+The mod detects the change within about half a second and applies it. A toast notification appears in the browser confirming the update.
 
 ---
 
-##  License
+## License
 
-This project is licensed under the [MIT License](LICENSE). Feel free to share it, adapt it, and submit pull requests!
+This project is licensed under the [MIT License](LICENSE).

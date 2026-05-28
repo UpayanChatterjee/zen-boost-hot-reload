@@ -12,7 +12,7 @@
     "type": "string",
     "property": "extensions.zen-boost-hot-reload.watch-file-path",
     "label": "Custom Watch File Path",
-    "description": "Enter the absolute path to the JSON boost file you want to watch (e.g., /home/tony/projects/my-boost.json). Leave empty to watch default '~/My Boost' and '~/my_boost.json' paths.",
+    "description": "Enter the absolute path to a directory containing boost files to watch (e.g., /home/username/my-boosts). Leave empty to watch the default ~/.config/zen-boosts/ directory.",
     "defaultValue": ""
   }
 ]
